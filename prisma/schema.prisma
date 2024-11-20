@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Applicant {
+  id                 Int                 @id @default(autoincrement())
+  name               String
+  gender             Gender
+  addresses          Address[]
+  identityTypes      Identity[]
+  connectionRequests ConnectionRequest[]
+}
+
+model Identity {
+  id               Int       @id @default(autoincrement())
+  governmentIdType String
+  governmentId     String    @unique
+  applicantId      Int
+  applicant        Applicant @relation(fields: [applicantId], references: [id])
+}
+
+model Address {
+  id          Int       @id @default(autoincrement())
+  state       String
+  district    String
+  pincode     Int
+  applicantId Int
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+}
+
+model ConnectionRequest {
+  id                Int         @id @default(autoincrement())
+  ownership         Ownership
+  category          Category
+  load              Int
+  applicationDate   DateTime    @default(now())
+  approvalDate      DateTime?    
+  modifiedDate      DateTime?   @updatedAt
+  status            Status      @default(PENDING)
+  applicants        Applicant[]
+}
+
+model reviewConnectionRequest {
+  id                Int         @id @default(autoincrement())
+  reviewerId        Int
+  connectionReqId   Int
+  reviewer_comments String
+}
+
+model Reviewer {
+  id                 Int                 @id @default(autoincrement())
+  name               String
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Ownership {
+  JOINT
+  INDIVIDUAL
+}
+
+enum Category {
+  RESIDENTIAL
+  COMMERCIAL
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+  CONNECTION_RELEASED
+}
