@@ -26,22 +26,18 @@ model Applicant {
 }
 
 model ConnectionRequest {
-  id              Int         @id @default(autoincrement())
-  ownership       Ownership
-  category        Category
-  load            Int
-  applicationDate DateTime    @default(now())
-  approvalDate    DateTime?
-  modifiedDate    DateTime?   @updatedAt
-  status          Status      @default(PENDING)
-  applicants      Applicant[]
-}
-
-model reviewConnectionRequest {
-  id                Int    @id @default(autoincrement())
-  reviewerId        Int
-  connectionReqId   Int
-  reviewer_comments String
+  id                Int         @id @default(autoincrement())
+  ownership         Ownership
+  category          Category
+  load              Int
+  applicationDate   DateTime    @default(now())
+  approvalDate      DateTime?
+  modifiedDate      DateTime?   @updatedAt
+  status            Status      @default(PENDING)
+  reviewerId        Int?
+  reviewer_comments String?
+  reviewer_name     String?
+  applicants        Applicant[]
 }
 
 model Reviewer {

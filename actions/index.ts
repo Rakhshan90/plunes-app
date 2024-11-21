@@ -21,7 +21,10 @@ export const getConnectionRecords = async () => {
                         name: true,
                         gender: true,
                     }
-                }
+                },
+                reviewerId: true,
+                reviewer_name: true,
+                reviewer_comments: true,
             }
         });
 
@@ -36,6 +39,9 @@ export const getConnectionRecords = async () => {
             approvalDate: record.approvalDate?.toDateString(),
             modifiedDate: record.modifiedDate?.toDateString(),
             applicants: record.applicants.length, // Transform to number
+            reviewerId: record.reviewerId,
+            reviewer_comments: record.reviewer_comments,
+            reviewer_name: record.reviewer_name
         }));
 
         return {
@@ -160,17 +166,8 @@ export const connectionDetails = async (connectionReqId: number) => {
 }
 
 
-// update connection details
-type UpdateParams = {
-    ownership: Ownership,
-    category: Category,
-    load: number,
-    approvalDate: Date,
-    modifiedDate: Date,
-    status: Status,
-    connectionReqId: number,
-}
-export const updateConnectionDetails = async ({ ownership, category, load, approvalDate, modifiedDate, status, connectionReqId }: UpdateParams) => {
+export const updateConnectionDetails = async ({ ownership, category, load, approvalDate, status, reviewerId, reviewer_comments, reviewer_name, connectionReqId }: 
+    {ownership: Ownership, category: Category, load: number, approvalDate: Date, status: Status, reviewerId: number, reviewer_comments: string, reviewer_name: string, connectionReqId: number}) => {
     try {
         await prisma.connectionRequest.update({
             where: {
@@ -181,8 +178,10 @@ export const updateConnectionDetails = async ({ ownership, category, load, appro
                 category,
                 status,
                 approvalDate,
-                modifiedDate,
                 load,
+                reviewerId,
+                reviewer_comments,
+                reviewer_name,
             }
         });
 
@@ -244,31 +243,6 @@ export const findApplicantsByConnectionReqId = async (connectionReqId: number)=>
         return {
             message: 'Error while searching for applicants, try again',
             applicants: []
-        }
-    }
-}
-
-
-export const findReviewDetails = async (connectionReqId: number)=>{
-    try {
-        const reviewDetails = await prisma.reviewConnectionRequest.findUnique({
-            where: {id: connectionReqId}
-        });
-
-        const reviewer = await prisma.reviewer.findUnique({
-            where: {id: reviewDetails?.reviewerId}
-        });
-
-        const reviewRecord = {...reviewer, ...reviewDetails};
-        return {
-            message: 'Review record has been found',
-            reviewRecord: reviewRecord || {}
-        };
-
-    } catch (error) {
-        return {
-            message: 'Error while searching for review details, try again',
-            reviewRecord: {}
         }
     }
 }

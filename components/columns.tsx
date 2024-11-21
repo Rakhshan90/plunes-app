@@ -17,6 +17,9 @@ export type ConnectionReqDetails = {
     approvalDate: String | undefined,
     modifiedDate: String | undefined,
     applicants: number;
+    reviewerId: number;
+    reviewer_comments: string;
+    reviewer_name: string;
 }
 
 export const columns: ColumnDef<ConnectionReqDetails>[] = [
@@ -49,6 +52,18 @@ export const columns: ColumnDef<ConnectionReqDetails>[] = [
         header: "Modified Date",
     },
     {
+        accessorKey: "reviewerId",
+        header: "Reviewer Id",
+    },
+    {
+        accessorKey: "reviewer_name",
+        header: "Reviewer Name",
+    },
+    {
+        accessorKey: "reviewer_comments",
+        header: "Reviewer Comments",
+    },
+    {
         id: "applicants",
         header: "Applicants",
         cell: ({ row }) => {
@@ -56,21 +71,6 @@ export const columns: ColumnDef<ConnectionReqDetails>[] = [
             return (
                 <Button
                     onClick={() => router.push(`/records/${row.original.id}/applicants`)}
-                    variant="secondary"
-                >
-                    View
-                </Button>
-            );
-        },
-    },
-    {
-        id: "reviewStatus",
-        header: "Review Status",
-        cell: ({ row }) => {
-            const router = useRouter(); // Access the Next.js router
-            return (
-                <Button
-                    onClick={() => router.push(`/records/${row.original.id}/review-status`)}
                     variant="secondary"
                 >
                     View
