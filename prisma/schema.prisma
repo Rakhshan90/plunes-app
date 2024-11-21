@@ -17,50 +17,36 @@ model Applicant {
   id                 Int                 @id @default(autoincrement())
   name               String
   gender             Gender
-  addresses          Address[]
-  identityTypes      Identity[]
+  state              String?
+  district           String?
+  pincode            Int?
+  governmentIdType   String?
+  governmentId       String?             @unique
   connectionRequests ConnectionRequest[]
 }
 
-model Identity {
-  id               Int       @id @default(autoincrement())
-  governmentIdType String
-  governmentId     String    @unique
-  applicantId      Int
-  applicant        Applicant @relation(fields: [applicantId], references: [id])
-}
-
-model Address {
-  id          Int       @id @default(autoincrement())
-  state       String
-  district    String
-  pincode     Int
-  applicantId Int
-  applicant   Applicant @relation(fields: [applicantId], references: [id])
-}
-
 model ConnectionRequest {
-  id                Int         @id @default(autoincrement())
-  ownership         Ownership
-  category          Category
-  load              Int
-  applicationDate   DateTime    @default(now())
-  approvalDate      DateTime?    
-  modifiedDate      DateTime?   @updatedAt
-  status            Status      @default(PENDING)
-  applicants        Applicant[]
+  id              Int         @id @default(autoincrement())
+  ownership       Ownership
+  category        Category
+  load            Int
+  applicationDate DateTime    @default(now())
+  approvalDate    DateTime?
+  modifiedDate    DateTime?   @updatedAt
+  status          Status      @default(PENDING)
+  applicants      Applicant[]
 }
 
 model reviewConnectionRequest {
-  id                Int         @id @default(autoincrement())
+  id                Int    @id @default(autoincrement())
   reviewerId        Int
   connectionReqId   Int
   reviewer_comments String
 }
 
 model Reviewer {
-  id                 Int                 @id @default(autoincrement())
-  name               String
+  id   Int    @id @default(autoincrement())
+  name String
 }
 
 enum Gender {
