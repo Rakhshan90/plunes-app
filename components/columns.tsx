@@ -4,6 +4,7 @@ import { Category, Ownership, Status } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table"
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
+import { ArrowUpDown } from "lucide-react"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -16,13 +17,17 @@ export type ConnectionReqDetails = {
     applicationDate: String;
     approvalDate: String | undefined,
     modifiedDate: String | undefined,
-    applicants: number;
+    applicantId: number;
     reviewerId: number;
     reviewer_comments: string;
     reviewer_name: string;
 }
 
 export const columns: ColumnDef<ConnectionReqDetails>[] = [
+    {
+        accessorKey: "applicantId",
+        header: "ID",
+    },
     {
         accessorKey: "status",
         header: "Status",

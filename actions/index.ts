@@ -18,6 +18,7 @@ export const getConnectionRecords = async () => {
                 modifiedDate: true,
                 applicants: {
                     select: {
+                        id: true,
                         name: true,
                         gender: true,
                     }
@@ -38,7 +39,7 @@ export const getConnectionRecords = async () => {
             status: record.status,
             approvalDate: record.approvalDate?.toDateString(),
             modifiedDate: record.modifiedDate?.toDateString(),
-            applicants: record.applicants.length, // Transform to number
+            applicantId: record.applicants.map((applicant)=> applicant.id),
             reviewerId: record.reviewerId,
             reviewer_comments: record.reviewer_comments,
             reviewer_name: record.reviewer_name
@@ -166,8 +167,8 @@ export const connectionDetails = async (connectionReqId: number) => {
 }
 
 
-export const updateConnectionDetails = async ({ ownership, category, load, approvalDate, status, reviewerId, reviewer_comments, reviewer_name, connectionReqId }: 
-    {ownership: Ownership, category: Category, load: number, approvalDate: Date, status: Status, reviewerId: number, reviewer_comments: string, reviewer_name: string, connectionReqId: number}) => {
+export const updateConnectionDetails = async ({ ownership, category, load, approvalDate, status, reviewerId, reviewer_comments, reviewer_name, connectionReqId }:
+    { ownership: Ownership, category: Category, load: number, approvalDate: Date, status: Status, reviewerId: number, reviewer_comments: string, reviewer_name: string, connectionReqId: number }) => {
     try {
         await prisma.connectionRequest.update({
             where: {
@@ -196,10 +197,10 @@ export const updateConnectionDetails = async ({ ownership, category, load, appro
 }
 
 
-export const findApplicantsByConnectionReqId = async (connectionReqId: number)=>{
+export const findApplicantsByConnectionReqId = async (connectionReqId: number) => {
     try {
         const connectionReqDetails = await prisma.connectionRequest.findUnique({
-            where: {id: connectionReqId},
+            where: { id: connectionReqId },
             select: {
                 applicants: {
                     select: {
@@ -247,4 +248,29 @@ export const findApplicantsByConnectionReqId = async (connectionReqId: number)=>
     }
 }
 
+
+export async function fetchMonthlyApplicationRequests() {
+    const requests = await prisma.connectionRequest.groupBy({
+        by: ['applicationDate'],
+        _count: {
+            id: true, // Count the number of requests
+        },
+    });
+
+    // Format the result to group by month
+    const monthlyData = requests.reduce((acc, request) => {
+        const month = new Date(request.applicationDate).toLocaleString('default', { month: 'short' });
+        if (!acc[month]) {
+            acc[month] = 0;
+        }
+        acc[month] += request._count.id;
+        return acc;
+    }, {} as Record<string, number>);
+
+    // Convert to an array format compatible with the graph
+    return Object.entries(monthlyData).map(([month, count]) => ({
+        name: month,
+        uv: count,
+    }));
+}
 
