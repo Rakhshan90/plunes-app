@@ -1,6 +1,4 @@
 import ApplicationReqGraph from "@/components/application-req-graph";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 export default function Home() {
   return (
