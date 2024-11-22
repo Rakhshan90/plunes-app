@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plunes - Case Study for Electricity Board 
 
-## Getting Started
+Created a web application for it’s staff
+with capability to view and edit the connections made/requested by the user.
+It is a Multi-Page User Interface to keep track of applied connections and
+their status.
+The application covers the following aspects--:
 
-First, run the development server:
+### PART A
+1. Display the records in a grid or tabular format.
+2. Search option to look for connection details with Applicant ID.
+3. Add a date picker to filter via date range via date of application.
+4. Option to view/edit electricity connection application requests.
+a. Refer dataset for the data attributes.
+b. Could be on same or different page.
+5. Data Validation.
+a. Should not be allowed to change the Date of Application, Govt ID Type, and ID Number.
+b. Load applied should not exceed 200 KV.
+
+### PART B
+1. Create a visualization graph e.g., bar or line chart for number of connection requests in every month.
+The user should be given flexibility to select status (pending, approved etc.) of choice. (Use some form of
+charting library).
+
+## Table of Contents
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [Usage](#usage)
+- [Screenshots](#screenshots)
+
+## Tech Stack
+- Language: TypeScript
+- Frontend: Next.js, Tailwind CSS, and Shadcn
+- Backend: Next.js, Zod, and Server actions
+- Database: PostgreSQL, Prisma ORM
+- Dockerization: Docker engine
+
+## Installation
+
+### 1. Clone the Repository
+First, clone this repository to your local machine:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/your-repo-name.git
+```
+### 2. Navigate to the Project Directory
+Change into the project directory:
+
+```bash
+cd your-repo-name
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Install Dependencies
+Install the required dependencies using pnpm:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Migrate Schema
 
-## Learn More
+```bash
+pnpm dlx migrate dev 
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Generate Client
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm run db:generate
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment Variables
+Ensure you set up the following environment variables in a .env file of the project:
 
-## Deploy on Vercel
+- DATABASE_URL: URL for your PostgreSQL database
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 1. Start the Server
+You can start the app by running:
+
+```bash
+pnpm run dev
+```
+
+## Screenshots
+
+![alt text](plunes-app-graph.png)
+
+![alt text](image-4.png)
+
+![alt text](image-2.png)
+
+![alt text](image-3.png)
+
