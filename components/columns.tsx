@@ -17,16 +17,20 @@ export type ConnectionReqDetails = {
     applicationDate: String;
     approvalDate: String | undefined,
     modifiedDate: String | undefined,
-    applicantId: number;
-    reviewerId: number;
-    reviewer_comments: string;
-    reviewer_name: string;
+    applicantId: number[];
+    reviewerId: number | null;
+    reviewer_comments: string | null;
+    reviewer_name: string | null;
 }
 
 export const columns: ColumnDef<ConnectionReqDetails>[] = [
     {
         accessorKey: "applicantId",
         header: "ID",
+        cell: ({ row }) => (
+            // Render the array as a comma-separated string
+            <div>{row.original.applicantId.join(", ")}</div>
+        ),
     },
     {
         accessorKey: "status",
